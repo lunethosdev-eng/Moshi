@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Apple Music UI · Liquid Glass
 
-## Getting Started
+Next.js recreation of the Apple Music player with **Liquid Glass** visual treatment inspired by Apple’s iOS 26 design language.
 
-First, run the development server:
+> **Note on the official docs**  
+> The official Kotlin Multiplatform guide ([Liquid Glass in a Compose Multiplatform app](https://kotlinlang.org/docs/multiplatform/ios-liquid-glass.html)) explains how to adopt the *native* system material on iOS by wrapping Compose screens inside SwiftUI `TabView` / `NavigationStack`.  
+> This project is a **web** (Next.js) app, so the real system material is not available. Instead we use a high-fidelity CSS approximation that follows the same visual principles documented by Apple and the community:
+
+- Translucent surface (`rgba` + high saturation)
+- `backdrop-filter: blur() saturate() brightness() contrast()`
+- Specular top-edge highlight (`inset box-shadow`)
+- Soft outer depth + subtle chromatic feel via gradients
+- Animated ambient background so the glass “refracts” visible content
+
+## Features
+
+- Liquid Glass player card
+- Album art with glass frame + playing scale animation
+- Glass chips for controls
+- Synchronized karaoke-style lyrics
+- Keyboard spacebar play/pause
+- Static export ready for Capacitor
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build for web
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+# static files land in /out
+```
 
-## Learn More
+## Android APK (Capacitor + GitHub Actions)
 
-To learn more about Next.js, take a look at the following resources:
+### One-time local setup (optional)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run build
+npx cap add android
+npx cap sync android
+npx cap open android   # opens Android Studio
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### GitHub Actions
 
-## Deploy on Vercel
+1. Push this repo to GitHub.
+2. Go to **Actions → Build Android APK → Run workflow**.
+3. Download the APK artifact (`apple-music-liquid-glass-debug`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+You can also trigger a release by pushing a tag:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The workflow builds a **debug** APK (no signing secrets required). For a signed release APK add your keystore as repository secrets and extend the Gradle signing config.
+
+## Project structure
+
+```
+app/
+  page.tsx          # Liquid background + player
+  globals.css       # Liquid Glass CSS system
+  layout.tsx
+  api/lyrics/       # LRC parser endpoint
+components/
+  Music.tsx         # Main player (glass classes)
+public/             # Audio, poster, lyrics
+capacitor.config.ts
+.github/workflows/build-android-apk.yml
+```
+
+## Credits
+
+- Song: Boney M. – Rasputin
+- Liquid Glass inspiration: Apple iOS 26 + community CSS approximations
+- Official KMP reference: https://kotlinlang.org/docs/multiplatform/ios-liquid-glass.html
