@@ -3,7 +3,8 @@ import Music from "@/components/Music";
 
 export default function Home() {
   return (
-    <div className="flex items-center overflow-hidden justify-center bg-gray-500 h-screen w-screen">
+    <div className="relative flex items-center justify-center h-screen w-screen overflow-hidden">
+      <div className="liquid-bg" aria-hidden="true" />
       <Music />
     </div>
   );
