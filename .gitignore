@@ -2,3 +2,15 @@
 /.next
 /.env
 .vercel
+
+# Capacitor / Android
+android/
+ios/
+.capacitor/
+out/
+node_modules/
+.next/
+*.apk
+*.aab
+*.jks
+*.keystore
